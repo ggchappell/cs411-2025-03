@@ -1,4 +1,4 @@
-// num_bits.cpp  UNFINISHED
+// num_bits.cpp
 // Glenn G. Chappell
 // 2025-09-05
 //
@@ -27,8 +27,12 @@ using std::istringstream;
 // Does not throw.
 int numBits(int n)
 {
-    // TODO: WRITE THIS!!!
-    return 42;  // Dummy
+    // BASE CASE
+    if (n == 1)
+        return 1;
+
+    // RECURSIVE CASE
+    return numBits(n/2) + 1;  // Integer division
 }
 
 
