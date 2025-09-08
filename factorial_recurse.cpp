@@ -1,4 +1,4 @@
-// factorial_recurse.cpp  UNFINISHED
+// factorial_recurse.cpp
 // Glenn G. Chappell
 // 2025-09-05
 //
@@ -35,8 +35,12 @@ using unum = uint_fast64_t;  // >= 64 bits, fast, unsigned
 // Does not throw.
 unum factorial(int n)
 {
-    // TODO: WRITE THIS!!!
-    return static_cast<unum>(42);  // Dummy
+    // BASE CASE
+    if (n == 0)
+        return static_cast<unum>(1);
+
+    // RECURSIVE CASE
+    return static_cast<unum>(n) * factorial(n-1);
 }
 
 
