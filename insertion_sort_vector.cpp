@@ -18,8 +18,8 @@ using std::size_t;
 // insertionSortVector
 // Sort a vector using Insertion Sort.
 // Requirements on Types:
-//     operator< is a total order on type T.
-//     Type T has a copy ctor & copy assignment.
+//     operator< is a total order on type Val.
+//     Type Val has a copy ctor & copy assignment.
 // Pre:
 //     None.
 template <typename Val>
@@ -55,7 +55,7 @@ void insertionSortVector(vector<Val> & v)
 }
 
 
-/// userPause
+// userPause
 // Wait for user to press ENTER: read all chars through first newline.
 void userPause()
 {
