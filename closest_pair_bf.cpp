@@ -1,4 +1,5 @@
 // closest_pair_bf.cpp
+// VERSION 2
 // Glenn G. Chappell
 // 2025-09-12
 //
@@ -82,14 +83,14 @@ struct Pt2 {
 };
 
 
-// dist
-// Given two Pt2 objects, returns the distance between them.
-double dist(const Pt2 & p1,
-            const Pt2 & p2)
+// distsqr
+// Given two Pt2 objects, returns square of distance between them.
+double distsqr(const Pt2 & p1,
+               const Pt2 & p2)
 {
     double xd = p1.x - p2.x;
     double yd = p1.y - p2.y;
-    return sqrt(xd*xd + yd*yd);
+    return xd*xd + yd*yd;
 }
 
 
@@ -130,7 +131,7 @@ void printPair(const vector<Pt2> & pts,
         swap(a, b);
     printPoint(pts, a);
     printPoint(pts, b);
-    cout << "Distance: " << dist(pts[a], pts[b]) << "\n";
+    cout << "Distance: " << sqrt(distsqr(pts[a], pts[b])) << "\n";
 }
 
 
@@ -145,21 +146,21 @@ pair<size_t, size_t> closestPair_bf(const vector<Pt2> & pts)
     size_t n = pts.size();  // Number of pts in dataset
     assert (n >= 2);
 
-    // Variables holding best pair so far & distances to compare
+    // Variables holding best pair so far & squared distances to compare
     // Best pair so far is initialized to first 2 pts given
     pair<size_t, size_t> closepair(0, 1);
                              // Indices of best pair so far
-    double closedist = dist(pts[0], pts[1]);
-                             // Distance of best pair so far
-    double newdist;          // Distance of new pair
+    double closedist = distsqr(pts[0], pts[1]);
+                             // Distance squared of best pair so far
+    double newdist;          // Distance squared of new pair
 
     // Loop through all pairs of indices i,j with 0 <= i < j < n
     for (size_t i = 0; i < n; ++i)
     {
         for (size_t j = i+1; j < n; ++j)
         {
-            // Find distance of current pair
-            newdist = dist(pts[i], pts[j]);
+            // Find distance squared of current pair
+            newdist = distsqr(pts[i], pts[j]);
 
             // Is this pair closer than best so far?
             if (newdist < closedist)
