@@ -18,7 +18,8 @@ using std::size_t;
 
 
 // insertionSortVectorRecurse
-// Sort first *size* items in a vector using Insertion Sort, recursive form.
+// Sort first *size* items in a vector using Insertion Sort, recursive
+// form.
 // Requirements on Types:
 //     operator< is a total order on type Val.
 //     Type Val has a copy ctor & copy assignment.
