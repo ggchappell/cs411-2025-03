@@ -1,4 +1,4 @@
-// topological_sort.cpp  UNFINISHED
+// topological_sort.cpp
 // Glenn G. Chappell
 // 2025-09-19
 //
@@ -18,6 +18,8 @@ using std::size_t;
 using std::lower_bound;
 #include <utility>
 using std::pair;
+#include <queue>
+using std::queue;
 #include <cassert>
 // For assert
 
@@ -50,8 +52,52 @@ using std::pair;
 //     adjlists holds the adjacency lists of a digraph (as above).
 pair<bool, vector<int>> topSort(const vector<vector<int>> & adjlists)
 {
-    // TODO: WRITE THIS!!!
-    return { false, vector<int>() };  // DUMMY
+    // Get number of vertices in digraph
+    const int N = int(adjlists.size());
+
+    vector<int> indegrees(N, 0);  // indegrees[i] counts in-neighbors
+                                  //  of vertex i that have NOT been
+                                  //  processed yet
+    for (int i = 0; i < N; ++i)
+    {
+        for (int j : adjlists[i])
+        {
+            ++indegrees[j];
+        }
+    }
+
+    queue<int> sources;           // Vertices with no unprocessed
+                                  //  in-neighbors
+    for (int i = 0; i < N; ++i)
+    {
+        if (indegrees[i] == 0)
+            sources.push(i);
+    }
+
+    vector<int> order;            // Vertices, in topological sort order
+    while (!sources.empty())
+    {
+        // Get a source
+        int s = sources.front();
+        sources.pop();
+
+        // Process this source as next vertex in topological sort
+        order.push_back(s);
+
+        // Consider s removed from digraph; update indegrees and sources
+        for (int v : adjlists[s])
+        {
+            // edge from s to v, so reduce indegree of v ...
+            --indegrees[v];
+            // ... and add v to sources if it has become a source
+            if (indegrees[v] == 0)
+                sources.push(v);
+        }
+    }
+
+    if (order.size() < size_t(N))         // Ran out of sources early?
+        return { false, vector<int>() };  // No top sort
+    return { true, order };  // Return top sort
 }
 
 
