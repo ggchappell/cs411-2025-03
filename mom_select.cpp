@@ -1,4 +1,4 @@
-// mom_select.cpp  UNFINISHED
+// mom_select.cpp
 // Glenn G. Chappell
 // 2025-09-26
 //
@@ -34,6 +34,18 @@ const size_t BIGSIZE = 100'000'000;
 
 // Values in datasets range from 0 to MAXVAL
 const int MAXVAL = 999'999'999;
+
+
+// *********************************************************************
+// Forward Declarations
+// *********************************************************************
+
+
+// momSelect
+// Selection using Median-of-Medians Selection algorithm.
+template <typename RAIter>
+RAIter momSelect(RAIter first, RAIter last,  // Range: [first, last)
+                 size_t index);              // Selection index
 
 
 // lPartition
@@ -211,8 +223,35 @@ template <typename RAIter>
 RAIter momSelect(RAIter first, RAIter last,  // Range: [first, last)
                  size_t index)               // Selection index
 {
-    // TODO: WRITE THIS!!!
-    return first;  // DUMMY
+    assert (index < last-first);
+    while (true)  // For tail-recursion elimination
+    {
+        // Find median-of-medians pivot & point pivotiter at it
+        RAIter pivotiter = momPivot(first, last);
+                                             // Indirect recursion!
+
+        // Do partition
+        lPartition(first, last, pivotiter);
+        size_t pivotindex = pivotiter - first;
+
+        // BASE CASE of former recursive function
+        // If the pivot is our item, then return it
+        if (index == pivotindex)
+            return pivotiter;
+
+        // RECURSIVE CASE of former recursive function
+        if (index < pivotindex)
+        {   // Recurse on range of items preceding the pivot
+            last = pivotiter;
+        }
+        else
+        {   // Recurse on range of items following the pivot
+            index -= pivotindex+1;
+            first = pivotiter+1;
+        }
+        // Tail call is gone, replaced by loop
+        // return momSelect(first, last, index);
+    }
 }
 
 
