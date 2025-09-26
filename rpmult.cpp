@@ -1,4 +1,4 @@
-// rpmult.cpp  UNFINISHED
+// rpmult.cpp
 // Glenn G. Chappell
 // 2025-09-24
 //
@@ -25,13 +25,43 @@ using std::exit;
 // Uses "Russian Peasant Multiplication". Should be able to handle any
 // product that operator* can compute.
 // Pre: None.
-// Note that postcondtions should hold even when a*b produces numeric
-// overflow.
+// Note that result is generally the same as that of operator* even when
+// a*b gives numeric overflow.
 int rpMult(int a,
            int b)
 {
-    // TODO: WRITE THIS!!!
-    return 42;  // DUMMY
+    // Determine whether product is negative
+    bool negative = false;  // Will be true for negative product
+    if (a < 0)
+    {
+        negative = !negative;
+        a = -a;
+    }
+    if (b < 0)
+    {
+        negative = !negative;
+        b = -b;
+    }
+
+    // We want a to be the smaller of a, b
+    if (b < a)
+        swap(a, b);
+
+    // result: sum of right-hand operands whose corresponding left-hand
+    //  operand is odd. When we are done, result should hold a * b.
+    int result = 0;
+
+    // R-P Multiplication loop
+    while (a > 0)
+    {
+        if (a % 2 != 0)
+            result += b;
+        a /= 2;
+        b *= 2;
+    }
+
+    // Fix the sign, and we're finished
+    return negative ? -result : result;
 }
 
 
