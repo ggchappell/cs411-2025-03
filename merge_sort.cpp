@@ -17,7 +17,6 @@ using std::vector;
 #include <cstddef>
 using std::size_t;
 #include <utility>
-using std::swap;
 using std::move;
 #include <iterator>
 using std::begin;
@@ -27,6 +26,7 @@ using std::next;
 using std::iterator_traits;
 #include <algorithm>
 using std::move;
+using std::swap
 #include <chrono>
 // Everything from <chrono> is preceded by std::
 #include <cassert>

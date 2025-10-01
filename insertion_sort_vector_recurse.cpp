@@ -13,6 +13,8 @@ using std::cin;
 using std::vector;
 #include <cstddef>
 using std::size_t;
+#include <utility>
+using std::move;
 #include <cassert>
 // For assert
 
