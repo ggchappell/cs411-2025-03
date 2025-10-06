@@ -1,4 +1,5 @@
 // closest_pair_dc.cpp
+// VERSION 2
 // Glenn G. Chappell
 // 2025-10-06
 //
@@ -223,7 +224,7 @@ pair<size_t, size_t> closestPair_dc_recurse(
 
     // BASE CASE
 
-    const size_t SMALL_SIZE = 3;    // Max base case size (must be >= 3)
+    const size_t SMALL_SIZE = 50;    // Max base case size (must be >= 3)
     assert (SMALL_SIZE >= 3);
     if (n <= SMALL_SIZE)
     {
@@ -325,7 +326,7 @@ pair<size_t, size_t> closestPair_dc_recurse(
     // Iterate through center strip
     // For each point, we consider the pairs consisting of this point
     // and each of the next K points.
-    const size_t K = 5;  // How many upcoming points to look at
+    const size_t K = 3;  // How many upcoming points to look at
     for (size_t i = 0; i < strip_ysort.size(); ++i)
     {
         size_t a = strip_ysort[i];
