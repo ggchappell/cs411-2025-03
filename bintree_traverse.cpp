@@ -1,4 +1,4 @@
-// bintree_traverse.cpp  UNFINISHED
+// bintree_traverse.cpp
 // Glenn G. Chappell
 // 2025-10-03
 //
@@ -95,8 +95,21 @@ void preorderTraverse(BinaryTree t,
                       const string & d3=" ",
                       const string & d4="")
 {
-    // TODO: WRITE THIS!!!
-    cout << "<preorderTraverse UNFINISHED>";  // DUMMY
+    if (t == nullptr)
+        return;
+    if (t->left == nullptr && t->right == nullptr)
+    {
+        // This is just to make the output prettier
+        cout << t->value;
+        return;
+    }
+    cout << d1;
+    cout << t->value;
+    cout << d2;
+    preorderTraverse(t->left, d1, d2, d3, d4);
+    cout << d3;
+    preorderTraverse(t->right, d1, d2, d3, d4);
+    cout << d4;
 }
 
 
@@ -109,8 +122,21 @@ void inorderTraverse(BinaryTree t,
                      const string & d3=" ",
                      const string & d4="")
 {
-    // TODO: WRITE THIS!!!
-    cout << "<inorderTraverse UNFINISHED>";  // DUMMY
+    if (t == nullptr)
+        return;
+    if (t->left == nullptr && t->right == nullptr)
+    {
+        // This is just to make the output prettier
+        cout << t->value;
+        return;
+    }
+    cout << d1;
+    inorderTraverse(t->left, d1, d2, d3, d4);
+    cout << d2;
+    cout << t->value;
+    cout << d3;
+    inorderTraverse(t->right, d1, d2, d3, d4);
+    cout << d4;
 }
 
 
@@ -123,8 +149,21 @@ void postorderTraverse(BinaryTree t,
                        const string & d3=" ",
                        const string & d4="")
 {
-    // TODO: WRITE THIS!!!
-    cout << "<postorderTraverse UNFINISHED>";  // DUMMY
+    if (t == nullptr)
+        return;
+    if (t->left == nullptr && t->right == nullptr)
+    {
+        // This is just to make the output prettier
+        cout << t->value;
+        return;
+    }
+    cout << d1;
+    postorderTraverse(t->left, d1, d2, d3, d4);
+    cout << d2;
+    postorderTraverse(t->right, d1, d2, d3, d4);
+    cout << d3;
+    cout << t->value;
+    cout << d4;
 }
 
 
@@ -143,11 +182,6 @@ int main()
     inorderTraverse(t);
     cout << endl << endl;
 
-    cout << "Postorder:\n  ";
-    postorderTraverse(t);
-    cout << endl << endl;
-
-/*
     cout << "Postorder (same as RPN, Forth):\n  ";
     postorderTraverse(t);
     cout << endl << endl;
@@ -163,7 +197,6 @@ int main()
     cout << "Normal (e.g., C++) infix operators (inorder):\n  ";
     inorderTraverse(t, "(", " ", " ", ")");
     cout << endl << endl;
-*/
 
     // Wait for user
     cout << "Press ENTER to quit ";
