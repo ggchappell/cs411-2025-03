@@ -224,16 +224,16 @@ pair<size_t, size_t> closestPair_dc_recurse(
 
     // BASE CASE
 
-    const size_t SMALL_SIZE = 50;    // Max base case size (must be >= 3)
+    const size_t SMALL_SIZE = 50;  // Max base case size (must be >= 3)
     assert (SMALL_SIZE >= 3);
     if (n <= SMALL_SIZE)
     {
         closepair.first = xsort_f[0];
         closepair.second = xsort_f[1];
-                                  // Indices of first 2 pts
+                                   // Indices of first 2 pts
         closedist = distsqr(pts[closepair.first],
                             pts[closepair.second]);
-                                  // Distance of first 2 pts
+                                   // Distance of first 2 pts
 
         // Loop through all pairs of indices i,j with 0 <= i < j < n
         for (size_t i = 0; i < n; ++i)
