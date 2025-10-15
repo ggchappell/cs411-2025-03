@@ -2,7 +2,7 @@
 // Glenn G. Chappell
 // 2025-10-01
 //
-// For CS 311 Fall 2025
+// For CS 411 Fall 2025
 // Quicksort, optimized
 
 #include <iostream>
