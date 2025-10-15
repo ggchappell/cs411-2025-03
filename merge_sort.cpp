@@ -26,7 +26,7 @@ using std::next;
 using std::iterator_traits;
 #include <algorithm>
 using std::move;
-using std::swap
+using std::swap;
 #include <chrono>
 // Everything from <chrono> is preceded by std::
 #include <cassert>
