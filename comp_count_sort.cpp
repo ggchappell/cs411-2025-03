@@ -1,4 +1,4 @@
-// comp_count_sort.cpp  UNFINISHED
+// comp_count_sort.cpp
 // Glenn G. Chappell
 // 2025-10-17
 //
@@ -48,7 +48,34 @@ const int MAXVAL = 999'999'999;
 template <typename RAIter>
 void comparisonCountingSort(RAIter first, RAIter last)
 {
-    // TODO: WRITE THIS!!!
+    using Value = typename iterator_traits<RAIter>::value_type;
+
+    size_t size = last - first;
+
+    vector<Value> buffer(size);
+    for (size_t i = 0; i < size; ++i)
+    {
+        // Interation i puts first[i] in proper place in buffer
+
+        // Count # of items that should come before first[i]
+        size_t countbefore = 0;
+        for (size_t k = 0; k < i; ++k)
+        {
+            if (!(first[i] < first[k]))
+                ++countbefore;
+        }
+        for (size_t k = i+1; k < size; ++k)
+        {
+            if (first[k] < first[i])
+                ++countbefore;
+        }
+
+        // Put first[i] in its place
+        buffer[countbefore] = first[i];
+    }
+
+    // Copy back to original storage
+    move(begin(buffer), end(buffer), first);
 }
 
 
