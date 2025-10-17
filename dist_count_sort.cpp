@@ -1,4 +1,4 @@
-// dist_count_sort.cpp  UNFINISHED
+// dist_count_sort.cpp
 // Glenn G. Chappell
 // 2025-10-17
 //
@@ -40,15 +40,51 @@ const int MAXVAL = 999'999;
 // Sort a range using Distribution Counting Sort.
 // Requirements on Types:
 //     RAIter is a random-access iterator type.
-//     The value type of RAIter has default ctor, dctor, copy=,
-//      operator<.
-//     operator< is a total order on the value type of RAIter.
+//     The value type of RAIter is int.
 // Pre:
 //     [first, last) is a valid range.
 template <typename RAIter>
 void distributionCountingSort(RAIter first, RAIter last)
 {
-    // TODO: WRITE THIS!!!
+    size_t size = last - first;
+
+    // FInd min, max elements of data
+    auto p = minmax_element(first, last);
+    auto minelt = *(p.first);
+    auto maxelt = *(p.second);
+
+    // Initialize frequencies
+    vector<size_t> freqs(maxelt-minelt+1, 0);
+    for (size_t i = 0; i < size; ++i)
+    {
+        ++freqs[first[i]-minelt];
+    }
+
+    // freqs[k-minval] is now number of times k occurs in given range
+
+    // Replace freqs[k] with sum of freqs[0]..freqs[k-1]
+    size_t runtotal = 0;
+    for (size_t k = 0; k < freqs.size(); ++k)
+    {
+        auto save = freqs[k];
+        freqs[k] = runtotal;
+        runtotal += save;
+    }
+
+    // freqs[k-minval] is now the index, in sorted version of given
+    //  range, of 1st item equal to k (if any).
+
+    // Make sorted list
+    vector<int> buffer(size);
+    for (size_t i = 0; i < size; ++i)
+    {
+        buffer[freqs[first[i]-minelt]] = first[i];
+        ++freqs[first[i]-minelt];
+            // Update index for next w/ same value
+    }
+
+    // Copy back to original storage
+    move(begin(buffer), end(buffer), first);
 }
 
 
