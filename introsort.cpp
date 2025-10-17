@@ -466,6 +466,44 @@ void trySort_nearlySorted2()
 }
 
 
+// trySort_Mo3Killer
+// Call doSort on Median-of-3 killer data. Size is BIGSIZE (global).
+// Values range from 0 to MAXVAL (global).
+// This should give worst-case performance if Median-of-3 pivot
+// choice is used.
+// Pre:
+//    Preconditions, if any, for sorting call made by doSort.
+void trySort_Mo3Killer()
+{
+    // Initial message
+    cout << "Sorting trial: Median-of-3 killer data\n";
+    cout << "Size = " << intWithSep(BIGSIZE) << "\n";
+    cout << "\n";
+
+
+    // Make dataset
+    vector<int> data(BIGSIZE);
+    for (size_t i = 0; i < BIGSIZE; ++i)
+        data[i] = int(i);
+    if (BIGSIZE >= 2)
+    {
+        size_t esize = BIGSIZE - (BIGSIZE % 2);
+            // Greatest even integer <= BIGSIZE
+        for (size_t i = esize-2; ; i -= 2)
+        {
+            size_t m = i+(esize-i)/2;
+            swap(data[i+1], data[m]);
+
+            if (i == 0)
+                break;
+        }
+    }
+
+    // Sort
+    doSort(begin(data), end(data));
+}
+
+
 // trySort_messy
 // Call doSort on "messy" data. Size is BIGISIZE (global). Values range
 // from 0 to MAXVAL (global).
@@ -525,6 +563,9 @@ int main()
 
     cout << "\n";
     trySort_nearlySorted2();
+
+    cout << "\n";
+    trySort_Mo3Killer();
 
     cout << "\n";
     trySort_messy();
