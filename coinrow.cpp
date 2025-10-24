@@ -1,4 +1,4 @@
-// coinrow.cpp  UNFINISHED
+// coinrow.cpp
 // Glenn G. Chappell
 // 2025-10-24
 //
@@ -15,6 +15,39 @@ using std::getline;
 using std::size_t;
 #include <vector>
 using std::vector;
+#include <algorithm>
+using std::max;
+#include <cassert>
+// for assert
+
+
+// coinRow_bf_recurse
+// Returns maximum sum of subset of values[0] .. values[n-1], on the
+// condition that no two consecutive values lie in the subset. Assumes
+// that all items in values are nonnegative.
+// Brute-force method.
+// Recursive helper for function coinRow_bf.
+int coinRow_bf_recurse(const vector<int> & values,
+                       size_t n)
+{
+    assert(n <= values.size());
+
+    // BASE CASE
+
+    if (n <= 1)
+    {
+        if (n == 0)
+            return 0;
+        return values[0];
+    }
+
+    // RECURSIVE CASE
+
+    int max_without_last = coinRow_bf_recurse(values, n-1);
+    int max_with_last = values[n-1] + coinRow_bf_recurse(values, n-2);
+    int max_over_all = max(max_without_last, max_with_last);
+    return max_over_all;
+}
 
 
 // coinRow_bf
@@ -22,10 +55,11 @@ using std::vector;
 // no two consecutive values lie in the subset. Assumes values are all
 // nonnegative.
 // Brute-force method.
+// Uses recursive helper function coinRow_bf_recurse.
 int coinRow_bf(const vector<int> & values)
 {
-    // TODO: WRITE THIS!!!
-    return 42;  // DUMMY
+    size_t n = values.size();
+    return coinRow_bf_recurse(values, n);
 }
 
 
@@ -36,8 +70,28 @@ int coinRow_bf(const vector<int> & values)
 // Uses dynamic programming (bottom-up).
 int coinRow_dp(const vector<int> & values)
 {
-    // TODO: WRITE THIS!!!
-    return 42;  // DUMMY
+    size_t n = values.size();
+
+    vector<int> maxsum;   // maxsum[i] is max total for 1st i coins,
+                          //  that is, for coins 0 .. i-1.
+    maxsum.reserve(n+1);
+
+    maxsum.push_back(0);  // maxsum[0] == 0
+    if (n >= 1) maxsum.push_back(values[0]);
+                          // maxsum[1] == value of initial coin
+
+    for (size_t i = 2; i <= n; ++i)
+    {
+        assert(maxsum.size() == i);
+
+        int max_without_last = maxsum[i-1];
+        int max_with_last = values[i-1] + maxsum[i-2];
+        int max_over_all = max(max_without_last, max_with_last);
+        maxsum.push_back(max_over_all);  // maxsum[i]
+    }
+
+    assert(maxsum.size() == n+1);
+    return maxsum[n];
 }
 
 
