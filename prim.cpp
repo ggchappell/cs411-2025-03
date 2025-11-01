@@ -1,4 +1,4 @@
-// prim.cpp  UNFINISHED
+// prim.cpp
 // Glenn G. Chappell
 // 2025-10-31
 //
@@ -62,7 +62,66 @@ vector<Edge> prim(
     const vector<vector<int>> & wmatrix,   // weight matrix
     int start)                             // index of start vertex
 {
-    return vector<Edge>();
+    const size_t N = adjlists.size();
+                                  // Number of vertices in graph
+    assert (wmatrix.size() == N);
+    for (size_t i = 0; i < N; ++i)
+    {
+        assert (wmatrix[i].size() == N);
+    }
+    assert (0 <= start && size_t(start) < N);
+
+    vector<int> reachable(N, 0);  // item i: 1 if vert i reachable
+    vector<Edge> tree;            // Edges in tree
+
+    // Make priority queue of edges; top edge is one of least weight
+
+    // Comparison function for priority_queue
+    auto comp = [&](const Edge & a,
+                    const Edge & b)
+    {
+        // Get weight of edges a & b
+        auto wt_a = wmatrix[a.first][a.second];
+        auto wt_b = wmatrix[b.first][b.second];
+        return wt_b < wt_a;       // Compare reversed to get smallest
+    };
+    // The priority queue itself
+    priority_queue<Edge, vector<Edge>, decltype(comp)> pq(comp);
+
+    // Handle start vertex
+    reachable[start] = 1;
+    for (auto v : adjlists[start])
+    {
+        if (reachable[v] == 0)
+            pq.push(Edge(start, v));
+    }
+
+    // Repeat until done with all edges
+    while (!pq.empty())
+    {
+        // Get least-weight edge from reachable to not-reachable vertex
+        auto e = pq.top();
+        pq.pop();
+
+        // Check "far" endpoint of edge. Reachable?
+        auto u = e.second;
+        if (reachable[u] == 1)
+            continue;
+
+        // Handle new edge (e) & vertex (u)
+        tree.push_back(e);
+        if (tree.size()+1 == N)  // Easy optimization
+            break;
+        reachable[u] = 1;
+        for (auto v : adjlists[u])
+        {
+            if (reachable[v] == 0)
+                pq.push(Edge(u, v));
+        }
+    }
+
+    // Done
+    return tree;
 }
 
 
