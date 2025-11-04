@@ -27,15 +27,15 @@ using std::priority_queue;
 
 // A GRAPH is represented by adjacency lists.
 // We use N for the number of vertices in a graph. Vertices are numbered
-// 0 .. N-1.
+// 0 .. N-1. A vertex index is stored as a size_t.
 //
-// Adjacency lists are stored in a vector<vector<int>> with size N.
+// Adjacency lists are stored in a vector<vector<size_t>> with size N.
 // Item i in this vector is a list of the neighbors of vertex i, in
 // ascending order.
 
 // A WEIGHTED GRAPH (weights on edges) is represented by a matrix of
 // weights, possibly along with adjacency lists. The matrix is stored as
-// a vector<vector<int>> with size N, in which all items have size N.
+// a vector<vector<size_t>> with size N, in which all items have size N.
 // Entry [i][j] holds the weight of the edge with endpoints i, j, if
 // this edge exists. Otherwise it holds the special value NO_EDGE.
 //
@@ -47,10 +47,10 @@ using std::priority_queue;
 // the graph.
 
 
-const int NO_EDGE = -1;       // In weight matrix, represents no edge
+const int NO_EDGE = -1;             // In weight matrix, means no edge
 
-using Edge = pair<int, int>;  // Type for edge of graph
-                              //  Integers are indices of endpoints
+using Edge = pair<size_t, size_t>;  // Type for edge of graph
+                                    //  size_t's are indices of endpts
 
 
 // prim
@@ -58,9 +58,9 @@ using Edge = pair<int, int>;  // Type for edge of graph
 // Given weighted graph (represented as discussed above), order of
 // graph, adjacency lists, and start vertex.
 vector<Edge> prim(
-    const vector<vector<int>> & adjlists,  // adjacency lists
-    const vector<vector<int>> & wmatrix,   // weight matrix
-    int start)                             // index of start vertex
+    const vector<vector<size_t>> & adjlists,  // adjacency lists
+    const vector<vector<int>> & wmatrix,      // weight matrix
+    size_t start)                             // index of start vertex
 {
     const size_t N = adjlists.size();
                                   // Number of vertices in graph
@@ -69,7 +69,7 @@ vector<Edge> prim(
     {
         assert (wmatrix[i].size() == N);
     }
-    assert (0 <= start && size_t(start) < N);
+    assert (start < N);
 
     vector<int> reachable(N, 0);  // item i: 1 if vert i reachable
     vector<Edge> tree;            // Edges in tree
@@ -131,7 +131,7 @@ vector<Edge> prim(
 //
 // Basically, this function is a constructor, except that we are not
 // using a class here.
-vector<vector<int>> emptyWeightMatrix(int N)
+vector<vector<int>> emptyWeightMatrix(size_t N)
 {
     return vector<vector<int>>(N, vector<int>(N, NO_EDGE));
 }
@@ -141,7 +141,7 @@ vector<vector<int>> emptyWeightMatrix(int N)
 // Sets weight of a,b edge in weighted graph described by
 //  wmatrix (see above).
 void setWeight(vector<vector<int>> & wmatrix,
-               int a, int b,
+               size_t a, size_t b,
                int wt)
 {
     wmatrix[a][b] = wt;
@@ -158,26 +158,26 @@ void setWeight(vector<vector<int>> & wmatrix,
 // with a field width of 3, padded on the left with blanks.
 void printWeightMatrix(const vector<vector<int>> & wmatrix)
 {
-    const int N = int(wmatrix.size());
+    const size_t N = wmatrix.size();
 
     cout << "    | ";
-    for (int col = 0; col < N; ++col)
+    for (size_t col = 0; col < N; ++col)
     {
         cout << setw(3) << col << " ";
     }
     cout << "\n";
 
     cout << " ---+-";
-    for (int col = 0; col < N; ++col)
+    for (size_t col = 0; col < N; ++col)
     {
         cout << "----";
     }
     cout << "\n";
 
-    for (int row = 0; row < N; ++row)
+    for (size_t row = 0; row < N; ++row)
     {
         cout << setw(3) << row << " | ";
-        for (int col = 0; col < N; ++col)
+        for (size_t col = 0; col < N; ++col)
         {
             int value = wmatrix[row][col];
             if (value == NO_EDGE)
@@ -194,14 +194,14 @@ void printWeightMatrix(const vector<vector<int>> & wmatrix)
 // makeAdjLists
 // Given matrix representation of weighted graph (see above), return
 // adjacency lists.
-vector<vector<int>> makeAdjLists(const vector<vector<int>> & wmatrix)
+vector<vector<size_t>> makeAdjLists(const vector<vector<int>> & wmatrix)
 {
-    const int N = int(wmatrix.size());
+    const size_t N = wmatrix.size();
 
-    vector<vector<int>> adjlists(N, vector<int>());
-    for (int i = 0; i < N; ++i)
+    vector<vector<size_t>> adjlists(N, vector<size_t>());
+    for (size_t i = 0; i < N; ++i)
     {
-        for (int j = 0; j < N; ++j)
+        for (size_t j = 0; j < N; ++j)
         {
             if (wmatrix[i][j] != NO_EDGE)
                 adjlists[i].push_back(j);
@@ -215,13 +215,13 @@ vector<vector<int>> makeAdjLists(const vector<vector<int>> & wmatrix)
 // Given adjacency lists for a graph, print them, each lists on a
 // separate line, preceded by the index of the vertex whose lists this
 // is, entries separated by commas.
-void printAdjacencyLists(const vector<vector<int>> & adjlists)
+void printAdjacencyLists(const vector<vector<size_t>> & adjlists)
 {
-    const int N = int(adjlists.size());
-    for (int i = 0; i < N; ++i)
+    const size_t N = adjlists.size();
+    for (size_t i = 0; i < N; ++i)
     {
         cout << setw(3) << i << ": ";
-        for (int j = 0; size_t(j) < adjlists[i].size(); ++j)
+        for (size_t j = 0; j < adjlists[i].size(); ++j)
         {
             if (j != 0)
                 cout << ", ";
@@ -246,7 +246,7 @@ void userPause()
 // result.
 int main()
 {
-    const int N = 5;  // Number of vertices of graph
+    const size_t N = 5;  // Number of vertices of graph
 
     // Set up weight matrix for graph;
     auto wmatrix = emptyWeightMatrix(N);
@@ -261,7 +261,7 @@ int main()
     setWeight(wmatrix, 3, 4, 9);
 
     // Print weights
-    cout << "Weight matrix:" << "\n";
+    cout << "Weight matrix:\n";
     printWeightMatrix(wmatrix);
     cout << "\n";
 
@@ -276,7 +276,7 @@ int main()
     userPause();
 
     // Run Prim's Algorithm & print result
-    const int start = 0;
+    const size_t start = 0;
     cout << "Running Prim's Algorithm "
          << "(start vertex: " << start << ") ... ";
     cout.flush();
@@ -286,7 +286,7 @@ int main()
     cout << "Edges in minimum spanning tree:\n";
     if (tree.size() == 0)
         cout << "[NONE]\n";
-    for (int i = 0; size_t(i) < tree.size(); ++i)
+    for (size_t i = 0; i < tree.size(); ++i)
     {
         cout << setw(3) << tree[i].first << ", " << tree[i].second
              << "\n";
