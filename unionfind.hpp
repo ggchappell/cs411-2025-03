@@ -20,8 +20,7 @@ using std::size_t;
 
 // class UnionFind
 // Union-Find structure.
-// "Quick union" (rooted tree) implementation.
-// path-compression optimizations.
+// "Quick union" / Disjoint Path Forest implementation.
 //
 // Items are size_t values.
 // Member functions:
