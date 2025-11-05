@@ -5,6 +5,7 @@
 // For CS 411 Fall 2025
 // Kruskal's Algorithm
 // Based on prim.cpp
+// Requires unionfind.hpp
 
 #include "unionfind.hpp"
 // For class UnionFind
