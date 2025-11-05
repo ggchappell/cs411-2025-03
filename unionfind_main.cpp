@@ -4,6 +4,7 @@
 //
 // For CS 411 Fall 2025
 // Simple main program for class UnionFind
+// Requires unionfind.hpp
 
 #include "unionfind.hpp"  // for class UnionFind
 #include <iostream>
