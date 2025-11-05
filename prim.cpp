@@ -7,7 +7,6 @@
 
 #include <iostream>
 using std::cout;
-using std::endl;
 using std::cin;
 #include <iomanip>
 using std::setw;
@@ -281,7 +280,7 @@ int main()
          << "(start vertex: " << start << ") ... ";
     cout.flush();
     vector<Edge> tree = prim(adjlists, wmatrix, start);
-    cout << "DONE\n" << endl;
+    cout << "DONE\n\n";
 
     cout << "Edges in minimum spanning tree:\n";
     if (tree.size() == 0)
