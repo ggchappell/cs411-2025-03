@@ -70,7 +70,7 @@ vector<Edge> prim(
     }
     assert (start < N);
 
-    vector<int> reachable(N, 0);  // item i: 1 if vert i reachable
+    vector<int> reached(N, 0);  // item i: 1 if vert i reached
     vector<Edge> tree;            // Edges in tree
 
     // Make priority queue of edges; top edge is one of least weight
@@ -88,33 +88,33 @@ vector<Edge> prim(
     priority_queue<Edge, vector<Edge>, decltype(comp)> pq(comp);
 
     // Handle start vertex
-    reachable[start] = 1;
+    reached[start] = 1;
     for (auto v : adjlists[start])
     {
-        if (reachable[v] == 0)
+        if (reached[v] == 0)
             pq.push(Edge(start, v));
     }
 
     // Repeat until done with all edges
     while (!pq.empty())
     {
-        // Get least-weight edge from reachable to not-reachable vertex
+        // Get least-weight edge from reached to not-reached vertex
         auto e = pq.top();
         pq.pop();
 
         // Check "far" endpoint of edge. Reachable?
         auto u = e.second;
-        if (reachable[u] == 1)
+        if (reached[u] == 1)
             continue;
 
         // Handle new edge (e) & vertex (u)
         tree.push_back(e);
         if (tree.size()+1 == N)  // Easy optimization
             break;
-        reachable[u] = 1;
+        reached[u] = 1;
         for (auto v : adjlists[u])
         {
-            if (reachable[v] == 0)
+            if (reached[v] == 0)
                 pq.push(Edge(u, v));
         }
     }
