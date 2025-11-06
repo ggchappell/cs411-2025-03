@@ -1,4 +1,4 @@
-// kruskal.cpp  UNFINISHED
+// kruskal.cpp
 // Glenn G. Chappell
 // 2025-11-05
 //
@@ -20,6 +20,11 @@ using std::vector;
 using std::size_t;
 #include <utility>
 using std::pair;
+#include <iterator>
+using std::begin;
+using std::end;
+#include <algorithm>
+using std::sort;
 #include <cassert>
 // For assert
 
@@ -62,8 +67,54 @@ vector<Edge> kruskal(
     const vector<vector<size_t>> & adjlists,  // adjacency lists
     const vector<vector<int>> & wmatrix)      // weight matrix
 {
-    // TODO: WRITE THIS!!!
-     return vector<Edge>();  // Dummy
+    const size_t N = adjlists.size();
+                                  // Number of vertices in graph
+    assert (wmatrix.size() == N);
+    for (size_t i = 0; i < N; ++i)
+    {
+        assert (wmatrix[i].size() == N);
+    }
+
+    // Make list of edges
+    vector<Edge> edges;
+    for (size_t i = 0; i < N; ++i)
+    {
+        for (auto v : adjlists[i])
+        {
+            if (i < v)
+                edges.push_back(Edge(i, v));
+        }
+    }
+
+    // List of edges -> sorted list of edges
+    sort(begin(edges), end(edges),
+         [&](const Edge & a, const Edge & b)
+         { return wmatrix[a.first][a.second]
+                < wmatrix[b.first][b.second]; });
+
+    // Make union-find structure with one blob for each vertex
+    UnionFind uf;
+    for (size_t i = 0; i < N; ++i)
+    {
+        uf.makeSet(i);
+    }
+
+    // Make tree from cheapest N-1 edges that do not create cycle
+    vector<Edge> tree;          // Edges in tree
+    for (auto e : edges)
+    {
+        if (uf.find(e.first) == uf.find(e.second))
+            continue;
+
+        // Add new edge to tree & do union
+        tree.push_back(e);
+        if (tree.size()+1 == N)  // Easy optimization
+            break;
+        uf.unionx(e.first, e.second);
+    }
+
+    // Done
+    return tree;
 }
 
 
