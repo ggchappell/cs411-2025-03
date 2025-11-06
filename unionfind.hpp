@@ -1,11 +1,17 @@
 // unionfind.hpp
+// VERSION 2
 // Glenn G. Chappell
-// 2025-11-03
+// Started: 2025-11-03
+// Updated: 2025-11-05
 //
 // For CS 411 Fall 2025
 // Header for class UnionFind
 // Union-Find Structure
 // There is no associated source file
+//
+// History:
+// - v1: All functionality working.
+// - v2: Added optimizations: union by rank, path compression.
 
 #ifndef FILE_UNIONFIND_HPP_INCLUDED
 #define FILE_UNIONFIND_HPP_INCLUDED
@@ -20,7 +26,8 @@ using std::size_t;
 
 // class UnionFind
 // Union-Find structure.
-// "Quick union" / Disjoint Path Forest implementation.
+// "Quick union" / Disjoint Path Forest implementation, with union by
+// rank and path-compression optimizations.
 //
 // Items are size_t values.
 // Member functions:
@@ -46,11 +53,11 @@ public:
     {
         if (x >= _data.size())
         {
-            _data.resize(x+1, Info(false, 0));
+            _data.resize(x+1, Info(false, 0, 0));
         }
 
         assert(!_data[x]._inited);
-        _data[x] = Info(true, x);
+        _data[x] = Info(true, x, 0);
     }
 
     // find
@@ -63,11 +70,12 @@ public:
         assert(x < _data.size());
         assert(_data[x]._inited);
 
+        // Do path compression
         if (_data[x]._parent != x)
         {
-            return find(_data[x]._parent);
+            _data[x]._parent = find(_data[x]._parent);
         }
-        return x;
+        return _data[x]._parent;
     }
 
     // unionx
@@ -93,7 +101,20 @@ public:
             return;
         }
 
-        _data[xroot]._parent = yroot;
+        // Do union by rank
+        if (_data[xroot]._rank < _data[yroot]._rank)
+        {
+            _data[xroot]._parent = yroot;
+        }
+        else if (_data[yroot]._rank < _data[xroot]._rank)
+        {
+            _data[yroot]._parent = xroot;
+        }
+        else
+        {
+            _data[yroot]._parent = xroot;
+            ++_data[xroot]._rank;
+        }
     }
 
 // ***** UnionFind: internal-use types *****
@@ -103,14 +124,17 @@ private:
     // Info on single item in union-find structure
     struct Info {
         bool _inited;     // Has Make-Set been called on this item?
-                          //  _parent field invalid if !_inited
+                          //  _parent, _rank fields invalid if !_inited
         size_t  _parent;  // Parent of item
+        size_t  _rank;    // Tree rank (height); only valid for root
 
         // Ctor from field values, for convenience
         Info(bool theInited,
-             size_t theParent)
+             size_t theParent,
+             size_t theRank)
            :_inited(theInited),
-            _parent(theParent)
+            _parent(theParent),
+            _rank(theRank)
         {}
     };
 
