@@ -1,6 +1,7 @@
-// disjstra.cpp  UNFINISHED
+// disjstra.cpp
 // Glenn G. Chappell
-// 2025-11-05
+// Started: 2025-11-05
+// Updated: 2025-11-07
 //
 // For CS 411 Fall 2025
 // Dijkstra's Algorithm
@@ -70,8 +71,6 @@ tuple<vector<Edge>, vector<int>, vector<size_t> > dijkstra(
     const vector<vector<int>> & wmatrix,      // weight matrix
     size_t start)                             // index of start vertex
 {
-    // CODE BELOW IS THE BODY OF FUNCTION prim FROM prim.cpp, EXCEPT FOR
-    // THE RETURN STATEMENT AT THE END.
     const size_t N = adjlists.size();
                                   // Number of vertices in graph
     assert (wmatrix.size() == N);
@@ -82,7 +81,13 @@ tuple<vector<Edge>, vector<int>, vector<size_t> > dijkstra(
     assert (start < N);
 
     vector<int> reached(N, 0);  // item i: 1 if vert i reached
-    vector<Edge> tree;            // Edges in tree
+    vector<Edge> tree;          // Edges in tree
+    vector<int> dist(N, INF);   // dist[v] is length of shortest path
+                                //  from start to v; INF if none known
+    vector<size_t> pred(N, NO_VERT);
+                                // pred[v] is predecessor of v in
+                                //  shortest path from start to v;
+                                //  NO_VERT if no predecessor.
 
     // Make priority queue of edges; top edge is one of least weight
 
@@ -90,15 +95,16 @@ tuple<vector<Edge>, vector<int>, vector<size_t> > dijkstra(
     auto comp = [&](const Edge & a,
                     const Edge & b)
     {
-        // Get weight of edges a & b
-        auto wt_a = wmatrix[a.first][a.second];
-        auto wt_b = wmatrix[b.first][b.second];
+        // Get modified weight of edges a & b
+        auto wt_a = wmatrix[a.first][a.second] + dist[a.first];
+        auto wt_b = wmatrix[b.first][b.second] + dist[b.first];
         return wt_b < wt_a;       // Compare reversed to get smallest
     };
     // The priority queue itself
     priority_queue<Edge, vector<Edge>, decltype(comp)> pq(comp);
 
     // Handle start vertex
+    dist[start] = 0;
     reached[start] = 1;
     for (auto v : adjlists[start])
     {
@@ -117,8 +123,11 @@ tuple<vector<Edge>, vector<int>, vector<size_t> > dijkstra(
         auto u = e.second;
         if (reached[u] == 1)
             continue;
+        auto t = e.first;
 
         // Handle new edge (e) & vertex (u)
+        dist[u] = dist[t] + wmatrix[t][u];
+        pred[u] = t;
         tree.push_back(e);
         if (tree.size()+1 == N)  // Easy optimization
             break;
@@ -131,7 +140,7 @@ tuple<vector<Edge>, vector<int>, vector<size_t> > dijkstra(
     }
 
     // Done
-    return make_tuple(tree, vector<int>(), vector<size_t>());
+    return make_tuple(tree, dist, pred);
 }
 
 
