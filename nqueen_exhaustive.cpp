@@ -8,7 +8,6 @@
 
 #include <iostream>
 using std::cout;
-using std::endl;
 using std::cin;
 #include <vector>
 using std::vector;
@@ -230,7 +229,7 @@ bool getInt(const string & prompt,  // Print this before doing input
         if (!founderror)
             break;
         cout << "\n";
-        cout << "Try again; please type an integer" << endl;
+        cout << "Try again; please type an integer\n";
     }
 
     return true;  // Successful input
@@ -260,8 +259,7 @@ int main()
         cout << "-----------------------\n";
         int count = nQueen(n);
         cout << "-----------------------\n";
-        cout << "Number of solutions found: " << count << endl;
-        cout << endl;
+        cout << "Number of solutions found: " << count << "\n\n";
     }
 }
 
