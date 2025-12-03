@@ -34,26 +34,27 @@ int knapsack_bf_recurse(const vector<int> & weights,
 {
     assert(weights.size() == values.size());
     assert(n <= weights.size());
-    int result;  // For our final result
+
+    // BASE CASE
 
     if (n == 0)  // BASE CASE
+        return 0;
+
+    // RECURSIVE CASE
+
+    int result;  // For our final result
+
+    int max_without_last =
+        knapsack_bf_recurse(weights, values,
+                            capacity, n-1);
+    if (weights[n-1] > capacity)
+        result = max_without_last;
+    else
     {
-        result = 0;
-    }
-    else         // RECURSIVE CASE
-    {
-        int max_without_last =
+        int max_with_last = values[n-1] +
             knapsack_bf_recurse(weights, values,
-                                capacity, n-1);
-        if (weights[n-1] > capacity)
-            result = max_without_last;
-        else
-        {
-            int max_with_last = values[n-1] +
-                knapsack_bf_recurse(weights, values,
-                                    capacity-weights[n-1], n-1);
-            result = max(max_with_last, max_without_last);
-        }
+                                capacity-weights[n-1], n-1);
+        result = max(max_with_last, max_without_last);
     }
 
     return result;
@@ -97,32 +98,36 @@ int knapsack_mem_recurse(const vector<int> & weights,
 {
     assert(weights.size() == values.size());
     assert(n <= weights.size());
-    int result;  // For our final result
 
     // Check if we have already computed this; if so, do not recompute
     if (knapsacktable[capacity*dim+n] != UNKNOWN)
         return knapsacktable[capacity*dim+n];
 
+    // BASE CASE
+
     if (n == 0)  // BASE CASE
     {
-        result = 0;
+        knapsacktable[capacity*dim+n] = 0;
+        return 0;
     }
-    else         // RECURSIVE CASE
+
+    // RECURSIVE CASE
+
+    int result;  // For our final result
+
+    int max_without_last =
+        knapsack_mem_recurse(weights, values,
+                             capacity, n-1,
+                             knapsacktable, dim);
+    if (weights[n-1] > capacity)
+        result = max_without_last;
+    else
     {
-        int max_without_last =
+        int max_with_last = values[n-1] +
             knapsack_mem_recurse(weights, values,
-                                 capacity, n-1,
+                                 capacity-weights[n-1], n-1,
                                  knapsacktable, dim);
-        if (weights[n-1] > capacity)
-            result = max_without_last;
-        else
-        {
-            int max_with_last = values[n-1] +
-                knapsack_mem_recurse(weights, values,
-                                     capacity-weights[n-1], n-1,
-                                     knapsacktable, dim);
-            result = max(max_with_last, max_without_last);
-        }
+        result = max(max_with_last, max_without_last);
     }
 
     // Save our result and return it
